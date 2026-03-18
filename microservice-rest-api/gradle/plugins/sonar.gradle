@@ -1,0 +1,16 @@
+/**
+ * SonarQube Plugin Configurations
+ */
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.sources", "src/main/"
+        property "sonar.tests", "src/test/"
+        property "sonar.exclusions", "**/configuration/**"
+        property "sonar.java.codeCoveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/jacoco.xml"
+    }
+}
+
+project.tasks["sonarqube"].dependsOn "test"

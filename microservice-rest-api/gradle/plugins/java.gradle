@@ -1,0 +1,41 @@
+/**
+ * Java Plugin Configurations
+ */
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+//desabilita geração *plain.jar
+jar {
+    enabled = false
+}
+
+//faz substituição do placeholder \${version} pelo respectivo valor
+//no application.yml
+processResources {
+    filesMatching("application*.yml") {
+        expand(["version": project.version])
+    }
+}
+
+test {
+    testLogging {
+        events = ["passed", "skipped", "failed"]
+        exceptionFormat = "full"
+        showStandardStreams = true
+    }
+    useJUnitPlatform()
+}

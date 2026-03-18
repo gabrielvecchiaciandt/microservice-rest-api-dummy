@@ -1,0 +1,4 @@
+apply from: "./gradle/plugins/java.gradle"
+apply from: "./gradle/plugins/openApiGenerator.gradle"
+apply from: "./gradle/plugins/jacoco.gradle"
+apply from: "./gradle/plugins/sonar.gradle"

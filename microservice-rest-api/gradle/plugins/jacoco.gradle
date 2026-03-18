@@ -1,0 +1,24 @@
+/**
+ * JaCoCo Plugin Configurations
+ */
+
+jacoco {
+    toolVersion "${jacoco_plugin_version}"
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    executionData tasks.withType(Test)
+    classDirectories.from = files(sourceSets.main.output.classesDirs)
+    sourceDirectories.from = files(sourceSets.main.java.srcDirs)
+    reports {
+        xml.required = true
+        xml.outputLocation = file("${layout.buildDirectory.get()}/reports/jacoco/jacoco.xml")
+        html.required = true
+        html.outputLocation = file("${layout.buildDirectory.get()}/reports/jacoco/html")
+    }
+}

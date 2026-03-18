@@ -1,0 +1,39 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: microservice-rest-api
+    version: ${version}
+
+#para utilizar o swagger-ui basta habilitar a property abaixo
+#path para acessar /swagger-ui/index.html
+springdoc:
+  swagger-ui:
+    enabled: false
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: microservice-rest-api
+    description: microservice-rest-api
+    version: ${version}
