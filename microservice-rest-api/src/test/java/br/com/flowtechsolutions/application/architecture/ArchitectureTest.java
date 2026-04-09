@@ -29,6 +29,7 @@ class ArchitectureTest {
     void init() {
         layeredArchitectureTemplate = layeredArchitecture()
             .consideringAllDependencies()
+            .withOptionalLayers(true)
             .layer("Configuration").definedBy("..configuration..")
             .layer("CoreDataprovider").definedBy("..core.dataprovider..")
             .layer("CoreEntity").definedBy("..core.entity..")

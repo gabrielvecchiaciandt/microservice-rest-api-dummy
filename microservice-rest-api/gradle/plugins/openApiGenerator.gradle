@@ -1,39 +1,39 @@
-///**
-// * Openapi Generator Plugin Configurations
-// */
-//
-//openApiGenerate {
-//    generatorName = "spring"
-//    inputSpec = "openApiSpec.yaml"
-//    outputDir = "${layout.buildDirectory.get()}/generated"
-//    configOptions = [
-//            "library"              : "spring-boot",
-//            "basePackage"          : "${project.group}",
-//            "apiPackage"           : "${project.group}.api",
-//            "modelPackage"         : "${project.group}.dto",
-//            "booleanGetterPrefix"  : "is",
-//            "skipDefaultInterface" : "true",
-//            "interfaceOnly"        : "true",
-//            "requestMappingMode"   : "api_interface",
-//            "delegatePattern"      : "false",
-//            "openApiNullable"      : "false",
-//            "generateBuilders"     : "true",
-//            "serializableModel"    : "true",
-//            "useSpringBoot3"       : "true",
-//            "useBeanValidation"    : "true",
-//            "performBeanValidation": "true"
-//    ]
-//    globalProperties = [
-//            apis  : "",
-//            models: ""
-//    ]
-//    cleanupOutput = true
-//}
-//
-//sourceSets {
-//    main {
-//        java.srcDir "${layout.buildDirectory.get()}/generated/src/main/java"
-//    }
-//}
-//
-//compileJava.dependsOn tasks.openApiGenerate
+/**
+ * Openapi Generator Plugin Configurations
+ */
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "${projectDir}/src/main/resources/openapi/produtos-api.yaml"
+    outputDir = "${layout.buildDirectory.get()}/generated"
+    configOptions = [
+            "library"              : "spring-boot",
+            "basePackage"          : "br.com.flowtechsolutions.api",
+            "apiPackage"           : "br.com.flowtechsolutions.api.api",
+            "modelPackage"         : "br.com.flowtechsolutions.api.dto",
+            "booleanGetterPrefix"  : "is",
+            "skipDefaultInterface" : "true",
+            "interfaceOnly"        : "true",
+            "requestMappingMode"   : "api_interface",
+            "delegatePattern"      : "false",
+            "openApiNullable"      : "false",
+            "generateBuilders"     : "true",
+            "serializableModel"    : "true",
+            "useSpringBoot3"       : "true",
+            "useBeanValidation"    : "true",
+            "performBeanValidation": "true"
+    ]
+    globalProperties = [
+            apis  : "",
+            models: ""
+    ]
+    cleanupOutput = true
+}
+
+sourceSets {
+    main {
+        java.srcDir "${layout.buildDirectory.get()}/generated/src/main/java"
+    }
+}
+
+compileJava.dependsOn tasks.openApiGenerate

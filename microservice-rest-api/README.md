@@ -87,7 +87,7 @@ de exemplos, simulando uma aplicação Rest que acessa um banco de dados em mem�
 > 4. `entrypoints`: neste pacote é onde ficam as formas de acesso da aplicação (endpoints),
       aqui fica a api rest, consumo de fila, grpc, jobs etc.
 
-> Ler mais sobre [aqui](https://alelo.helpjuice.com/padr%C3%B5es-t%C3%A1ticos/padr%C3%A3o-de-desenvolvimento-clean-architecture?from_search=155281677)
+> Ler mais sobre Clean Architecture em recursos externos na internet
 
 ## Configurações da Aplicação
 
@@ -114,18 +114,8 @@ chmod +x ./gradlew
 ./gradlew bootRun
 ```
 
-## Sugestões e Reportes
-
-Tem alguma sugestão de melhoria ou quer reportar algum erro?
-[Clique aqui](https://dev.azure.com/alelo/Plataformas)
-
-Quer contribuir com o projeto?
-[Clique aqui](https://dev.azure.com/alelo/Plataformas/_git/template-ms-rest-api-spring-boot)
-
 ## Referências
 
-- [Alelo - Api First](https://alelo.helpjuice.com/arquitetura/api-first?from_search=166360775)
-- [Alelo - Clean Architecture](https://alelo.helpjuice.com/padr%C3%B5es-t%C3%A1ticos/padr%C3%A3o-de-desenvolvimento-clean-architecture?from_search=155281677)
-- [Cofre de senhas](https://alelo.helpjuice.com/como-utilizar/como-utilizar-a-biblioteca-de-cofre-de-senhas?from_search=155931448)
-- [Log de Aplicação](https://alelo.helpjuice.com/pt_BR/alelo-system-logger-log-de-aplicacao/biblioteca-de-log-de-aplicacao-application-logger)
-- [Openapi Generator](https://openapi-generator.tech/)
+- [Clean Architecture - Uncle Bob](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [OpenAPI Generator](https://openapi-generator.tech/)
+- [Spring Boot Documentation](https://spring.io/projects/spring-boot)

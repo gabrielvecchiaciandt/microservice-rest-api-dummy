@@ -1,0 +1,420 @@
+openapi: 3.0.3
+info:
+  title: API de Gerenciamento de Catálogo de Produtos
+  description: |
+    API REST para gerenciamento completo de catálogo de produtos.
+    Permite operações CRUD (Create, Read, Update, Delete) e consulta de histórico de alterações.
+  version: 1.0.0
+  contact:
+    name: Equipe de Desenvolvimento
+    email: dev@flowtechsolutions.com.br
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor de desenvolvimento local
+
+tags:
+  - name: Produtos
+    description: Operações relacionadas ao gerenciamento de produtos
+paths:
+  /api/v1/produtos:
+    get:
+      tags:
+        - Produtos
+      summary: Listar todos os produtos
+      description: Retorna uma lista com todos os produtos cadastrados no sistema
+      operationId: listarProdutos
+      responses:
+        '200':
+          description: Lista de produtos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProdutoResponse'
+    
+    post:
+      tags:
+        - Produtos
+      summary: Criar novo produto
+      description: Cadastra um novo produto no sistema
+      operationId: criarProduto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProdutoRequest'
+      responses:
+        '201':
+          description: Produto criado com sucesso
+          headers:
+            Location:
+              description: URI do produto criado
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutoResponse'
+        '400':
+          description: Dados inválidos fornecidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/produtos/{id}:
+    get:
+      tags:
+        - Produtos
+      summary: Buscar produto por ID
+      description: Retorna os dados de um produto específico
+      operationId: buscarProdutoPorId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único do produto
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutoResponse'
+        '404':
+          description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    put:
+      tags:
+        - Produtos
+      summary: Atualizar produto
+      description: Atualiza os dados de um produto existente
+      operationId: atualizarProduto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único do produto
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProdutoRequest'
+      responses:
+        '200':
+          description: Produto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutoResponse'
+        '400':
+          description: Dados inválidos fornecidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    delete:
+      tags:
+        - Produtos
+      summary: Remover produto
+      description: Remove um produto do sistema
+      operationId: removerProduto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único do produto
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Produto removido com sucesso
+        '404':
+          description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/produtos/{id}/historico:
+    get:
+      tags:
+        - Produtos
+      summary: Consultar histórico de alterações
+      description: Retorna o histórico completo de alterações de um produto
+      operationId: consultarHistorico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador único do produto
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Histórico retornado com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoricoResponse'
+        '404':
+          description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ProdutoRequest:
+      type: object
+      required:
+        - nome
+        - preco
+        - categoria
+      properties:
+        nome:
+          type: string
+          minLength: 3
+          maxLength: 100
+          description: Nome do produto
+          example: Notebook Dell Inspiron
+        descricao:
+          type: string
+          maxLength: 500
+          description: Descrição detalhada do produto
+          example: Notebook com processador Intel i7, 16GB RAM, SSD 512GB
+        preco:
+          type: number
+          format: double
+          minimum: 0.01
+          description: Preço do produto
+          example: 4500.00
+        categoria:
+          type: string
+          enum:
+            - INFORMATICA
+            - ELETRONICOS
+            - MOVEIS
+            - LIVROS
+            - OUTROS
+          description: Categoria do produto
+          example: INFORMATICA
+        cnpjFornecedor:
+          type: string
+          description: |
+            CNPJ do fornecedor no formato numérico legado (XX.XXX.XXX/YYYY-ZZ ou 14 dígitos).
+            Apenas o formato numérico é aceito (formato legado pré-2026).
+          example: "11.222.333/0001-81"
+
+    ProdutoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identificador único do produto
+          example: 1
+        nome:
+          type: string
+          description: Nome do produto
+          example: Notebook Dell Inspiron
+        descricao:
+          type: string
+          description: Descrição detalhada do produto
+          example: Notebook com processador Intel i7, 16GB RAM, SSD 512GB
+        preco:
+          type: number
+          format: double
+          description: Preço do produto
+          example: 4500.00
+        categoria:
+          type: string
+          enum:
+            - INFORMATICA
+            - ELETRONICOS
+            - MOVEIS
+            - LIVROS
+            - OUTROS
+          description: Categoria do produto
+          example: INFORMATICA
+        dataCadastro:
+          type: string
+          format: date-time
+          description: Data e hora do cadastro do produto
+          example: 2026-03-18T14:20:30
+        cnpjFornecedor:
+          type: string
+          description: CNPJ do fornecedor no formato XX.XXX.XXX/YYYY-ZZ (numérico legado)
+          example: "11.222.333/0001-81"
+
+    EmpresaRequest:
+      type: object
+      required:
+        - cnpj
+        - razaoSocial
+      properties:
+        cnpj:
+          type: string
+          description: |
+            CNPJ no formato numérico legado — aceita com máscara (XX.XXX.XXX/YYYY-ZZ)
+            ou somente dígitos (14 caracteres). Apenas números são aceitos (pré-2026).
+          example: "11.222.333/0001-81"
+        razaoSocial:
+          type: string
+          minLength: 3
+          maxLength: 150
+          description: Razão social da empresa
+          example: "Empresa Exemplo Comércio LTDA"
+        nomeFantasia:
+          type: string
+          maxLength: 100
+          description: Nome fantasia da empresa
+          example: "Empresa Exemplo"
+        email:
+          type: string
+          maxLength: 150
+          description: E-mail de contato
+          example: "contato@empresa.com.br"
+        telefone:
+          type: string
+          maxLength: 20
+          description: Telefone de contato
+          example: "(11) 3000-0000"
+
+    EmpresaResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identificador único da empresa
+          example: 1
+        cnpj:
+          type: string
+          description: CNPJ no formato XX.XXX.XXX/YYYY-ZZ (numérico legado)
+          example: "11.222.333/0001-81"
+        razaoSocial:
+          type: string
+          description: Razão social da empresa
+          example: "Empresa Exemplo Comércio LTDA"
+        nomeFantasia:
+          type: string
+          description: Nome fantasia
+          example: "Empresa Exemplo"
+        email:
+          type: string
+          description: E-mail de contato
+          example: "contato@empresa.com.br"
+        telefone:
+          type: string
+          description: Telefone de contato
+          example: "(11) 3000-0000"
+        ativa:
+          type: boolean
+          description: Indica se a empresa está ativa no sistema
+          example: true
+        dataCadastro:
+          type: string
+          format: date-time
+          description: Data e hora do cadastro
+          example: "2026-01-15T10:30:00"
+
+    HistoricoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identificador único do registro de histórico
+          example: 1
+        produtoId:
+          type: integer
+          format: int64
+          description: Identificador do produto alterado
+          example: 1
+        tipoOperacao:
+          type: string
+          enum:
+            - CREATE
+            - UPDATE
+            - DELETE
+          description: Tipo de operação realizada
+          example: CREATE
+        dataHora:
+          type: string
+          format: date-time
+          description: Data e hora da alteração
+          example: 2026-03-18T14:20:30
+        dadosAnteriores:
+          type: string
+          description: Dados anteriores do produto em formato JSON (null para CREATE)
+          example: null
+        dadosNovos:
+          type: string
+          description: Dados novos do produto em formato JSON (null para DELETE)
+          example: '{"nome":"Notebook Dell","preco":4500.00}'
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Data e hora do erro
+          example: 2026-03-18T14:30:00
+        status:
+          type: integer
+          description: Código de status HTTP
+          example: 404
+        error:
+          type: string
+          description: Descrição do tipo de erro
+          example: Not Found
+        message:
+          type: string
+          description: Mensagem de erro detalhada
+          example: Produto com ID 999 não encontrado
+        path:
+          type: string
+          description: Path da requisição que gerou o erro
+          example: /api/v1/produtos/999
+        errors:
+          type: array
+          description: Lista de erros de validação (quando aplicável)
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Nome do campo com erro
+                example: nome
+              message:
+                type: string
+                description: Mensagem de erro do campo
+                example: Nome deve ter entre 3 e 100 caracteres

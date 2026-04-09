@@ -1,3 +1,7 @@
+/microservice-rest-api/build/
+/refinamentos/
+/python teste project/
+/microservice-rest-api/.gradle/
 # Default ignored files
 /shelf/
 /workspace.xml
@@ -9,3 +13,6 @@
 # Editor-based HTTP Client requests
 /httpRequests/
 /.name
+/.idea/
+/build/
+/.gradle/
