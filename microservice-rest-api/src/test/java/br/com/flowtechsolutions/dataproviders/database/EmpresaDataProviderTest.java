@@ -47,7 +47,7 @@ class EmpresaDataProviderTest {
     }
 
     @Test
-    @DisplayName("Deve salvar empresa com CNPJ armazenado como 14 dígitos numéricos")
+    @DisplayName("Deve salvar empresa com CNPJ armazenado como 14 caracteres")
     void deveSalvarComCnpjSoDigitos() {
         Empresa empresa = new Empresa(
             CnpjFixtures.CNPJ_EMPRESA_A_MATRIZ,
@@ -89,7 +89,7 @@ class EmpresaDataProviderTest {
     }
 
     @Test
-    @DisplayName("Deve listar todas as empresas reconstruindo CNPJs numéricos")
+    @DisplayName("Deve listar todas as empresas reconstruindo CNPJs")
     void deveListarTodasEmpresas() {
         List<EmpresaEntity> entities = List.of(
             entityFixtura(1L, CnpjFixtures.CNPJ_EMPRESA_A_MATRIZ_DIGITOS, "Empresa A"),
@@ -107,9 +107,9 @@ class EmpresaDataProviderTest {
                 CnpjFixtures.CNPJ_FORNECEDOR_ALPHA_DIGITOS,
                 CnpjFixtures.CNPJ_ITAU_DIGITOS
             );
-        // Todos os CNPJs devem estar no formato numérico (14 dígitos)
+        // Todos os CNPJs devem estar no formato alfanumérico (14 caracteres)
         resultado.forEach(e ->
-            assertThat(e.cnpj().soDigitos()).matches("\\d{14}")
+            assertThat(e.cnpj().soDigitos()).matches("[A-Z0-9]{12}\\d{2}")
         );
     }
 

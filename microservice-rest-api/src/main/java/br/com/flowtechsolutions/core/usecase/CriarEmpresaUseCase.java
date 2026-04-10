@@ -28,7 +28,7 @@ public class CriarEmpresaUseCase {
      * @param empresa dados da empresa a ser criada (sem ID e dataCadastro)
      * @return a empresa criada com ID e dataCadastro preenchidos
      * @throws IllegalArgumentException se os dados forem inválidos
-     * @throws CnpjInvalidoException se o CNPJ não for um CNPJ numérico válido
+     * @throws CnpjInvalidoException se o CNPJ for inválido
      * @throws IllegalStateException se já existir empresa com o mesmo CNPJ
      */
     public Empresa executar(Empresa empresa) {
@@ -36,7 +36,7 @@ public class CriarEmpresaUseCase {
 
         empresa.validar();
 
-        if (empresaDataProvider.existePorCnpj(empresa.cnpj().soDigitos())) {
+        if (empresaDataProvider.existePorCnpj(empresa.cnpj().getValor())) {
             throw new IllegalStateException(
                 "Já existe uma empresa cadastrada com o CNPJ: " + empresa.cnpj().formatado());
         }

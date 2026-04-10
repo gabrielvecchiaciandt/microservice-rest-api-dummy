@@ -4,18 +4,18 @@ import br.com.flowtechsolutions.core.entity.exception.CnpjInvalidoException;
 
 /**
  * Value object representando um CNPJ no formato numérico (14 dígitos).
- * Formato: XX.XXX.XXX/YYYY-ZZ
+ * Formato: AA.AAA.AAA/AAAA-##
  *
- * Apenas o formato numérico legado é aceito (somente dígitos).
- * O novo formato alfanumérico (a partir de junho/2026) não é suportado.
+ * Suporta tanto o formato numérico legado quanto o novo formato alfanumérico
+ * (a partir de junho/2026).
  */
 public record Cnpj(String valor) {
 
-    /** Padrão formatado: XX.XXX.XXX/YYYY-ZZ */
-    public static final String FORMATO_MASCARA = "\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}";
+    /** Padrão formatado: AA.AAA.AAA/AAAA-## */
+    public static final String FORMATO_MASCARA = "[A-Za-z0-9]{2}\\.([A-Za-z0-9]{3})\\.([A-Za-z0-9]{3})/([A-Za-z0-9]{4})-\\d{2}";
 
-    /** Padrão somente dígitos (14 caracteres numéricos) */
-    public static final String FORMATO_SOMENTE_DIGITOS = "\\d{14}";
+    /** Padrão somente dígitos (12 alfanuméricos + 2 numéricos) */
+    public static final String FORMATO_SOMENTE_DIGITOS = "[A-Za-z0-9]{12}\\d{2}";
 
     public Cnpj {
         if (valor == null || valor.isBlank()) {
@@ -26,7 +26,7 @@ public record Cnpj(String valor) {
     }
 
     /**
-     * Retorna o CNPJ no formato XX.XXX.XXX/YYYY-ZZ.
+     * Retorna o CNPJ no formato AA.AAA.AAA/AAAA-##.
      */
     public String formatado() {
         String d = removerFormatacao(valor);
@@ -51,9 +51,9 @@ public record Cnpj(String valor) {
     }
 
     private static void validarDigitos(String cnpj) {
-        if (!cnpj.matches(FORMATO_SOMENTE_DIGITOS)) {
+        if (!cnpj.matches("[a-zA-Z0-9]{12}[0-9]{2}")) {
             throw new CnpjInvalidoException(
-                "CNPJ deve conter apenas dígitos numéricos (formato legado): " + cnpj);
+                "CNPJ deve ter 12 caracteres alfanuméricos e 2 dígitos verificadores numéricos: " + cnpj);
         }
         if (cnpj.chars().distinct().count() == 1) {
             throw new CnpjInvalidoException("CNPJ inválido: todos os dígitos são iguais: " + cnpj);
@@ -67,7 +67,7 @@ public record Cnpj(String valor) {
         int[] pesos = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
         int soma = 0;
         for (int i = 0; i < 12; i++) {
-            soma += Character.getNumericValue(cnpj.charAt(i)) * pesos[i];
+            soma += Character.getNumericValue(Character.toUpperCase(cnpj.charAt(i))) * pesos[i];
         }
         int resto = soma % 11;
         int digito = (resto < 2) ? 0 : (11 - resto);
@@ -78,7 +78,7 @@ public record Cnpj(String valor) {
         int[] pesos = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
         int soma = 0;
         for (int i = 0; i < 13; i++) {
-            soma += Character.getNumericValue(cnpj.charAt(i)) * pesos[i];
+            soma += Character.getNumericValue(Character.toUpperCase(cnpj.charAt(i))) * pesos[i];
         }
         int resto = soma % 11;
         int digito = (resto < 2) ? 0 : (11 - resto);
