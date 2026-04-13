@@ -28,7 +28,7 @@ public class EmpresaDataProviderImpl implements EmpresaDataProvider {
 
     @Override
     public Empresa salvar(Empresa empresa) {
-        logger.debug("Salvando empresa com CNPJ: {}", empresa.cnpj().soDigitos());
+        logger.debug("Salvando empresa com CNPJ: {}", empresa.cnpj());
         EmpresaEntity entity = toEntity(empresa);
         EmpresaEntity salva = empresaRepository.save(entity);
         return toDomain(salva);
@@ -70,7 +70,7 @@ public class EmpresaDataProviderImpl implements EmpresaDataProvider {
     private EmpresaEntity toEntity(Empresa empresa) {
         return new EmpresaEntity(
             empresa.id(),
-            empresa.cnpj().soDigitos(),
+            empresa.cnpj().getValor(),
             empresa.razaoSocial(),
             empresa.nomeFantasia(),
             empresa.email(),
