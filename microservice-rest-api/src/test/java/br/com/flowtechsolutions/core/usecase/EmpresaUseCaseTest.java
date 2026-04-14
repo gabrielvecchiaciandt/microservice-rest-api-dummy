@@ -37,12 +37,12 @@ import static org.mockito.Mockito.when;
 @DisplayName("Use Cases de Empresa")
 class EmpresaUseCaseTest {
 
-    // CNPJs numéricos legados para os testes
-    private static final String CNPJ_EMPRESA_A      = "A1B2C3D4E00181"; // A1.B2C.3D4/E001-81
-    private static final String CNPJ_FORNECEDOR_A   = "F1G2H3J4K00195"; // F1.G2H.3J4/K001-95
-    private static final String CNPJ_FORNECEDOR_B   = "L1M2N3P4Q00175"; // L1.M2N.3P4/Q001-75
-    private static final String CNPJ_PETROBRAS       = "R1S2T3U4V00101"; // R1.S2T.3U4/V001-01
-    private static final String CNPJ_ITAU            = "W1X2Y3Z4A00104"; // W1.X2Y.3Z4/A001-04
+    // CNPJs numéricos válidos para os testes (formato legado)
+    private static final String CNPJ_EMPRESA_A      = "11222333000181"; // 11.222.333/0001-81
+    private static final String CNPJ_FORNECEDOR_A   = "12345678000195"; // 12.345.678/0001-95
+    private static final String CNPJ_FORNECEDOR_B   = "45678901000175"; // 45.678.901/0001-75
+    private static final String CNPJ_PETROBRAS       = "33000167000101"; // 33.000.167/0001-01
+    private static final String CNPJ_ITAU            = "60701190000104"; // 60.701.190/0001-04
 
     @Mock
     private EmpresaDataProvider empresaDataProvider;
@@ -89,8 +89,8 @@ class EmpresaUseCaseTest {
             Empresa resultado = useCase.executar(novaEmpresa);
 
             assertThat(resultado.id()).isEqualTo(1L);
-            assertThat(resultado.cnpj().soDigitos()).isEqualTo(CNPJ_EMPRESA_A);
-            assertThat(resultado.cnpj().formatado()).isEqualTo("A1.B2C.3D4/E001-81");
+            assertThat(resultado.cnpj().valor()).isEqualTo(CNPJ_EMPRESA_A);
+            assertThat(resultado.cnpj().formatado()).isEqualTo("11.222.333/0001-81");
             verify(empresaDataProvider).salvar(any());
         }
 
@@ -107,7 +107,7 @@ class EmpresaUseCaseTest {
 
             assertThatThrownBy(() -> useCase.executar(novaEmpresa))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("A1.B2C.3D4/E001-81");
+                .hasMessageContaining("11.222.333/0001-81");
 
             verify(empresaDataProvider, never()).salvar(any());
         }
@@ -145,7 +145,7 @@ class EmpresaUseCaseTest {
             when(empresaDataProvider.buscarPorCnpj(CNPJ_PETROBRAS)).thenReturn(Optional.of(empresa));
 
             Empresa resultado = useCase.executar(CNPJ_PETROBRAS);
-            assertThat(resultado.cnpj().formatado()).isEqualTo("R1.S2T.3U4/V001-01");
+            assertThat(resultado.cnpj().formatado()).isEqualTo("33.000.167/0001-01");
         }
 
         @Test
@@ -154,7 +154,7 @@ class EmpresaUseCaseTest {
             Empresa empresa = empresaFixtura(CNPJ_ITAU, "Itaú Unibanco S.A.");
             when(empresaDataProvider.buscarPorCnpj(CNPJ_ITAU)).thenReturn(Optional.of(empresa));
 
-            Empresa resultado = useCase.executar("W1.X2Y.3Z4/A001-04");
+            Empresa resultado = useCase.executar("60.701.190/0001-04");
             assertThat(resultado.razaoSocial()).isEqualTo("Itaú Unibanco S.A.");
         }
 
@@ -199,7 +199,7 @@ class EmpresaUseCaseTest {
             List<Empresa> resultado = useCase.executar();
 
             assertThat(resultado).hasSize(3);
-            assertThat(resultado).extracting(e -> e.cnpj().soDigitos())
+            assertThat(resultado).extracting(e -> e.cnpj().valor())
                 .containsExactly(CNPJ_EMPRESA_A, CNPJ_FORNECEDOR_A, CNPJ_PETROBRAS);
         }
 

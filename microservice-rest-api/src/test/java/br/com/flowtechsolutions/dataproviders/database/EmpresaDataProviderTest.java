@@ -59,7 +59,7 @@ class EmpresaDataProviderTest {
         Empresa resultado = dataProvider.salvar(empresa.comIdEDataCadastro(null, LocalDateTime.now()));
 
         assertThat(resultado.id()).isEqualTo(1L);
-        assertThat(resultado.cnpj().soDigitos()).isEqualTo(CnpjFixtures.CNPJ_EMPRESA_A_MATRIZ_DIGITOS);
+        assertThat(resultado.cnpj().valor()).isEqualTo(CnpjFixtures.CNPJ_EMPRESA_A_MATRIZ_DIGITOS);
         assertThat(resultado.cnpj().formatado()).isEqualTo(CnpjFixtures.CNPJ_EMPRESA_A_MATRIZ_FORMATADO);
     }
 
@@ -101,7 +101,7 @@ class EmpresaDataProviderTest {
         List<Empresa> resultado = dataProvider.listarTodas();
 
         assertThat(resultado).hasSize(3);
-        assertThat(resultado).extracting(e -> e.cnpj().soDigitos())
+        assertThat(resultado).extracting(e -> e.cnpj().valor())
             .containsExactly(
                 CnpjFixtures.CNPJ_EMPRESA_A_MATRIZ_DIGITOS,
                 CnpjFixtures.CNPJ_FORNECEDOR_ALPHA_DIGITOS,
@@ -109,7 +109,7 @@ class EmpresaDataProviderTest {
             );
         // Todos os CNPJs devem estar no formato alfanumérico (14 caracteres)
         resultado.forEach(e ->
-            assertThat(e.cnpj().soDigitos()).matches("[A-Z0-9]{12}\\d{2}")
+            assertThat(e.cnpj().valor()).matches("[A-Z0-9]{12}\\d{2}")
         );
     }
 

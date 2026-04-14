@@ -12,15 +12,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * Testes para o value object Cnpj no formato alfanumérico (pós-2026).
+ * Testes para o value object Cnpj no formato numérico (14 dígitos).
  *
- * CNPJs válidos utilizados nestes testes (formato AAAAAAAA/BBBB-CC):
- *   A1B2C3D4/E5F6-78
- *   11223344/ABCD-12
- *   PETR0BRA/S001-01  (Exemplo Petrobras adaptado)
- *   ITAUUNIB/ANC0-04  (Exemplo Itaú Unibanco adaptado)
+ * CNPJs válidos utilizados nestes testes:
+ *   11222333000181 (11.222.333/0001-81) - Empresa fictícia matriz
+ *   12345678000195 (12.345.678/0001-95) - Fornecedor Alpha LTDA
+ *   33000167000101 (33.000.167/0001-01) - Petróleo Brasileiro S.A.
+ *   60701190000104 (60.701.190/0001-04) - Itaú Unibanco S.A.
  */
-@DisplayName("Cnpj (formato alfanumérico pós-2026)")
+@DisplayName("Cnpj (formato numérico)")
 class CnpjTest {
 
     @Nested
@@ -29,10 +29,10 @@ class CnpjTest {
 
         @ParameterizedTest(name = "CNPJ formatado: {0}")
         @ValueSource(strings = {
-            "A1.B2C.3D4/E5F6-78",
-            "11.223.344/ABCD-12",
-            "PE.TR0.BRA/S001-01",
-            "IT.AUU.NIB/ANC0-04"
+            "11.222.333/0001-81",
+            "12.345.678/0001-95",
+            "33.000.167/0001-01",
+            "60.701.190/0001-04"
         })
         @DisplayName("Deve aceitar CNPJ formatado válido")
         void deveAceitarCnpjFormatado(String cnpj) {
@@ -40,48 +40,73 @@ class CnpjTest {
             assertThat(resultado.formatado()).isEqualTo(cnpj);
         }
 
-        @ParameterizedTest(name = "CNPJ somente caracteres: {0}")
+        @ParameterizedTest(name = "CNPJ somente dígitos: {0}")
         @ValueSource(strings = {
-            "A1B2C3D4E5F678",
-            "11223344ABCD12",
-            "PETR0BRAS00101",
-            "ITAUUNIBANC004"
+            "11222333000181",
+            "12345678000195",
+            "33000167000101",
+            "60701190000104"
         })
-        @DisplayName("Deve aceitar CNPJ com somente caracteres")
+        @DisplayName("Deve aceitar CNPJ com somente dígitos")
         void deveAceitarCnpjSoDigitos(String cnpj) {
             Cnpj resultado = new Cnpj(cnpj);
-            assertThat(resultado.soDigitos()).isEqualTo(cnpj);
+            assertThat(resultado.valor()).isEqualTo(cnpj);
         }
 
         @Test
-        @DisplayName("Deve retornar formato com máscara AA.AAA.AAA/AAAA-##")
+        @DisplayName("Deve retornar formato com máscara XX.XXX.XXX/XXXX-XX")
         void deveRetornarFormatoComMascara() {
-            Cnpj cnpj = new Cnpj("A1B2C3D4E5F678");
-            assertThat(cnpj.formatado()).isEqualTo("A1.B2C.3D4/E5F6-78");
+            Cnpj cnpj = new Cnpj("11222333000181");
+            assertThat(cnpj.formatado()).isEqualTo("11.222.333/0001-81");
         }
 
         @Test
-        @DisplayName("Deve retornar somente os 14 caracteres")
+        @DisplayName("Deve retornar somente os 14 dígitos")
         void deveRetornarSomenteDigitos() {
-            Cnpj cnpj = new Cnpj("A1.B2C.3D4/E5F6-78");
-            assertThat(cnpj.soDigitos()).isEqualTo("A1B2C3D4E5F678");
-            assertThat(cnpj.soDigitos()).hasSize(14);
-            assertThat(cnpj.soDigitos()).matches("[A-Z0-9]{12}\\d{2}");
+            Cnpj cnpj = new Cnpj("11.222.333/0001-81");
+            // O valor é normalizado (sem formatação) internamente
+            assertThat(cnpj.valor()).isEqualTo("11222333000181");
+            assertThat(cnpj.valor()).hasSize(14);
+            assertThat(cnpj.valor()).matches("\\d{14}");
         }
 
         @Test
         @DisplayName("CNPJ com dígito verificador 0 deve ser válido (ex: Petrobras)")
         void cnpjComDigitoVerificadorZeroDeveSerValido() {
-            // PETR0BRA/S001-01 — exemplo com dígitos verificadores numéricos
-            assertThat(new Cnpj("PETR0BRAS00101").soDigitos()).isEqualTo("PETR0BRAS00101");
+            // 33.000.167/0001-01 — Petrobras com dígito verificador 01
+            assertThat(new Cnpj("33000167000101").valor()).isEqualTo("33000167000101");
         }
 
         @Test
         @DisplayName("Deve ser imutável — dois Cnpj com mesmo valor são iguais")
         void deveSerImutavel() {
-            Cnpj a = new Cnpj("A1B2C3D4E5F678");
-            Cnpj b = new Cnpj("A1.B2C.3D4/E5F6-78");
-            assertThat(a.soDigitos()).isEqualTo(b.soDigitos());
+            Cnpj a = new Cnpj("11222333000181");
+            Cnpj b = new Cnpj("11.222.333/0001-81");
+            // Ambos são normalizados para o mesmo valor
+            assertThat(a.valor()).isEqualTo(b.valor());
+        }
+
+        @ParameterizedTest(name = "CNPJ alfanumérico válido: {0}")
+        @ValueSource(strings = {
+            "12ABC34501DE35",
+            "1345C3A5000106",
+            "R55231B3000757",
+            "90.021.382/0001-22",
+            "90.024.778/000123"
+        })
+        @DisplayName("Deve aceitar CNPJs alfanuméricos válidos (exemplos oficiais do governo)")
+        void deveAceitarCnpjsAlfanumericosValidos(String cnpj) {
+            Cnpj resultado = new Cnpj(cnpj);
+            assertThat(resultado.valor()).isNotNull();
+        }
+
+        @Test
+        @DisplayName("Deve normalizar CNPJs com letras minúsculas para MAIÚSCULAS")
+        void deveNormalizarParaMaiusculas() {
+            Cnpj cnpjMinuscula = new Cnpj("12abc34501de35");
+            Cnpj cnpjMaiuscula = new Cnpj("12ABC34501DE35");
+            assertThat(cnpjMinuscula.valor()).isEqualTo(cnpjMaiuscula.valor());
+            assertThat(cnpjMinuscula.valor()).isEqualTo("12ABC34501DE35");
         }
     }
 
@@ -120,35 +145,36 @@ class CnpjTest {
         @Test
         @DisplayName("Deve rejeitar CNPJ com dígitos verificadores incorretos")
         void deveRejeitarDigitosVerificadoresIncorretos() {
-            // A1B2C3D4/E5F6-00 — dígitos verificadores hipoteticamente incorretos
-            assertThatThrownBy(() -> new Cnpj("A1B2C3D4E5F600"))
+            // 11.222.333/0001-00 — dígitos verificadores incorretos (deveria ser -81)
+            assertThatThrownBy(() -> new Cnpj("11222333000100"))
                 .isInstanceOf(CnpjInvalidoException.class);
         }
 
         @Test
         @DisplayName("Deve rejeitar CNPJ com menos de 14 caracteres")
         void deveRejeitarMenosDe14Digitos() {
-            assertThatThrownBy(() -> new Cnpj("A1B2C3D4E5F67"))
+            assertThatThrownBy(() -> new Cnpj("1122233300018"))
                 .isInstanceOf(CnpjInvalidoException.class);
         }
 
         @Test
         @DisplayName("Deve rejeitar CNPJ com mais de 14 caracteres")
         void deveRejeitarMaisDe14Digitos() {
-            assertThatThrownBy(() -> new Cnpj("A1B2C3D4E5F6789"))
+            assertThatThrownBy(() -> new Cnpj("112223330001811"))
                 .isInstanceOf(CnpjInvalidoException.class);
         }
 
-        @ParameterizedTest(name = "CNPJ alfanumérico (formato pós-2026): {0}")
+        @ParameterizedTest(name = "CNPJ alfanumérico inválido: {0}")
         @ValueSource(strings = {
-            "A1.B2C.3D4/E5F6-78",
-            "11.223.344/ABCD-12",
-            "A1B2C3D4E5F678"
+            "R55231B3000700",     // DV incorreto (deveria ser 57)
+            "90.025.108/000101",  // DV incorreto (deveria ser 21)
+            "90.025.255/0001",    // Tamanho inválido (falta DV)
+            "90.024.420/0001A2"   // Letra no DV (deve ser numérico)
         })
-        @DisplayName("Deve aceitar CNPJ alfanumérico (formato pós-2026)")
-        void deveAceitarCnpjAlfanumerico(String cnpj) {
-            // Apenas instancia para verificar se não lança exceção, conforme o novo padrão
-            new Cnpj(cnpj);
+        @DisplayName("Deve rejeitar CNPJs alfanuméricos inválidos (exemplos oficiais do governo)")
+        void deveRejeitarCnpjsAlfanumericosInvalidos(String cnpj) {
+            assertThatThrownBy(() -> new Cnpj(cnpj))
+                .isInstanceOf(CnpjInvalidoException.class);
         }
     }
 }

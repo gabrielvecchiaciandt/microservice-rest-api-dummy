@@ -67,7 +67,7 @@ public class EmpresasController {
         URI location = ServletUriComponentsBuilder
             .fromCurrentRequest()
             .path("/{cnpj}")
-            .buildAndExpand(criada.cnpj())
+            .buildAndExpand(criada.cnpj().valor())
             .toUri();
 
         return ResponseEntity.created(location).body(response);
@@ -107,7 +107,7 @@ public class EmpresasController {
     @DeleteMapping("/{cnpj}")
     public ResponseEntity<Void> inativarEmpresa(@PathVariable String cnpj) {
         Cnpj cnpjValidado = new Cnpj(cnpj);
-        inativarEmpresaUseCase.executar(cnpjValidado.toString());
+        inativarEmpresaUseCase.executar(cnpjValidado.valor());
         return ResponseEntity.noContent().build();
     }
 }

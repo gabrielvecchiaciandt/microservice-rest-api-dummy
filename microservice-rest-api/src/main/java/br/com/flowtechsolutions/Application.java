@@ -11,10 +11,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     "br.com.flowtechsolutions"
 })
 @EnableJpaRepositories(basePackages = {
-    "br.com.flowtechsolutions.dataproviders.database.repository"
+        "br.com.flowtechsolutions.database.repository",
+        "br.com.flowtechsolutions.dataproviders.database.repository"
 })
 @EntityScan(basePackages = {
-    "br.com.flowtechsolutions.dataproviders.database.entity"
+        "br.com.flowtechsolutions.database.entity",
+        "br.com.flowtechsolutions.dataproviders.database.entity"
 })
 public class Application {
     public static void main(final String[] args) {

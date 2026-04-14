@@ -34,7 +34,7 @@ public class BuscarEmpresaPorCnpjUseCase {
         Cnpj cnpjValidado = new Cnpj(cnpj);
         logger.debug("Buscando empresa por CNPJ: {}", cnpjValidado.formatado());
 
-        return empresaDataProvider.buscarPorCnpj(cnpjValidado.getValor())
+        return empresaDataProvider.buscarPorCnpj(cnpjValidado.valor())
             .orElseThrow(() -> new EmpresaNaoEncontradaException(cnpjValidado.formatado()));
     }
 }
