@@ -106,9 +106,9 @@ class EmpresaDataProviderTest {
                 CnpjFixtures.CNPJ_FORNECEDOR_ALPHA_DIGITOS,
                 CnpjFixtures.CNPJ_ITAU_DIGITOS
             );
-        // Todos os CNPJs devem estar no formato numérico (14 dígitos)
+        // Todos os CNPJs devem estar no formato alfanumérico (12) e numérico (2)
         resultado.forEach(e ->
-            assertThat(e.cnpj().soDigitos()).matches("\\d{14}")
+            assertThat(e.cnpj().soDigitos()).matches("[A-Z0-9]{12}\\d{2}")
         );
     }
 

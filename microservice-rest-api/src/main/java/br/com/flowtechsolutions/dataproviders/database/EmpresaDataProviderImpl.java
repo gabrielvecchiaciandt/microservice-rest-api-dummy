@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * Implementação do EmpresaDataProvider usando Spring Data JPA.
- * O CNPJ é persistido como string de 14 dígitos numéricos (formato legado).
+ * O CNPJ é persistido como string de 14 caracteres alfanuméricos.
  */
 public class EmpresaDataProviderImpl implements EmpresaDataProvider {
 
@@ -28,7 +28,7 @@ public class EmpresaDataProviderImpl implements EmpresaDataProvider {
 
     @Override
     public Empresa salvar(Empresa empresa) {
-        logger.debug("Salvando empresa com CNPJ: {}", empresa.cnpj().soDigitos());
+        logger.debug("Salvando empresa com CNPJ: {}", empresa.cnpj().getValor());
         EmpresaEntity entity = toEntity(empresa);
         EmpresaEntity salva = empresaRepository.save(entity);
         return toDomain(salva);
@@ -70,7 +70,7 @@ public class EmpresaDataProviderImpl implements EmpresaDataProvider {
     private EmpresaEntity toEntity(Empresa empresa) {
         return new EmpresaEntity(
             empresa.id(),
-            empresa.cnpj().soDigitos(),
+            empresa.cnpj().getValor(),
             empresa.razaoSocial(),
             empresa.nomeFantasia(),
             empresa.email(),

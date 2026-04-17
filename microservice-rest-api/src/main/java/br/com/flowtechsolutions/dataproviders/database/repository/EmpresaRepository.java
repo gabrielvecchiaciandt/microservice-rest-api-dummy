@@ -9,15 +9,15 @@ import java.util.Optional;
 
 /**
  * Repository Spring Data JPA para operações de persistência de Empresa.
- * O CNPJ é tratado como string de 14 dígitos numéricos (formato legado).
+ * O CNPJ é tratado como string de 14 caracteres (formato alfanumérico a partir de 2026).
  */
 @Repository
 public interface EmpresaRepository extends JpaRepository<EmpresaEntity, Long> {
 
     /**
-     * Busca empresa pelo CNPJ (14 dígitos numéricos sem formatação).
+     * Busca empresa pelo CNPJ (14 caracteres alfanuméricos sem formatação).
      *
-     * @param cnpj os 14 dígitos do CNPJ
+     * @param cnpj os 14 caracteres do CNPJ
      * @return Optional com a empresa se encontrada
      */
     Optional<EmpresaEntity> findByCnpj(String cnpj);
@@ -25,7 +25,7 @@ public interface EmpresaRepository extends JpaRepository<EmpresaEntity, Long> {
     /**
      * Verifica se existe empresa com o CNPJ informado.
      *
-     * @param cnpj os 14 dígitos do CNPJ
+     * @param cnpj os 14 caracteres do CNPJ
      * @return true se existe
      */
     boolean existsByCnpj(String cnpj);

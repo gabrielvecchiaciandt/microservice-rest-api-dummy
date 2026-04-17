@@ -12,10 +12,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
- * Testes para o value object Cnpj no formato numérico legado (pré-2026).
+ * Testes para o value object Cnpj no formato alfanumérico (pós-2026).
  *
- * CNPJs válidos utilizados nestes testes (formato XX.XXX.XXX/YYYY-ZZ):
- *   11.222.333/0001-81
+ * CNPJs válidos utilizados nestes testes (formato AA.AAA.AAA/AAAA-##):
+ *   A1.B2C.3D4/0001-11
  *   11.222.333/0002-62
  *   12.345.678/0001-95
  *   33.000.167/0001-01  (Petrobras)
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  *   60.701.190/0001-04  (Itaú Unibanco)
  *   98.765.432/0001-98
  */
-@DisplayName("Cnpj (formato numérico legado)")
+@DisplayName("Cnpj (formato alfanumérico)")
 class CnpjTest {
 
     @Nested
@@ -32,7 +32,7 @@ class CnpjTest {
 
         @ParameterizedTest(name = "CNPJ formatado: {0}")
         @ValueSource(strings = {
-            "11.222.333/0001-81",
+            "A1.B2C.3D4/0001-11",
             "11.222.333/0002-62",
             "12.345.678/0001-95",
             "33.000.167/0001-01",
@@ -48,7 +48,7 @@ class CnpjTest {
 
         @ParameterizedTest(name = "CNPJ somente dígitos: {0}")
         @ValueSource(strings = {
-            "11222333000181",
+            "A1B2C3D4000111",
             "11222333000262",
             "12345678000195",
             "33000167000101",
@@ -63,19 +63,19 @@ class CnpjTest {
         }
 
         @Test
-        @DisplayName("Deve retornar formato com máscara XX.XXX.XXX/YYYY-ZZ")
+        @DisplayName("Deve retornar formato com máscara AA.AAA.AAA/AAAA-##")
         void deveRetornarFormatoComMascara() {
-            Cnpj cnpj = new Cnpj("11222333000181");
-            assertThat(cnpj.formatado()).isEqualTo("11.222.333/0001-81");
+            Cnpj cnpj = new Cnpj("A1B2C3D4000111");
+            assertThat(cnpj.formatado()).isEqualTo("A1.B2C.3D4/0001-11");
         }
 
         @Test
-        @DisplayName("Deve retornar somente os 14 dígitos")
+        @DisplayName("Deve retornar somente os 14 caracteres")
         void deveRetornarSomenteDigitos() {
-            Cnpj cnpj = new Cnpj("11.222.333/0001-81");
-            assertThat(cnpj.soDigitos()).isEqualTo("11222333000181");
+            Cnpj cnpj = new Cnpj("A1.B2C.3D4/0001-11");
+            assertThat(cnpj.soDigitos()).isEqualTo("A1B2C3D4000111");
             assertThat(cnpj.soDigitos()).hasSize(14);
-            assertThat(cnpj.soDigitos()).matches("\\d{14}");
+            assertThat(cnpj.soDigitos()).matches("[A-Z0-9]{12}\\d{2}");
         }
 
         @Test
@@ -88,8 +88,8 @@ class CnpjTest {
         @Test
         @DisplayName("Deve ser imutável — dois Cnpj com mesmo valor são iguais")
         void deveSerImutavel() {
-            Cnpj a = new Cnpj("11222333000181");
-            Cnpj b = new Cnpj("11.222.333/0001-81");
+            Cnpj a = new Cnpj("A1B2C3D4000111");
+            Cnpj b = new Cnpj("A1.B2C.3D4/0001-11");
             assertThat(a.soDigitos()).isEqualTo(b.soDigitos());
         }
     }
@@ -148,17 +148,16 @@ class CnpjTest {
                 .isInstanceOf(CnpjInvalidoException.class);
         }
 
-        @ParameterizedTest(name = "CNPJ alfanumérico (novo formato 2026 — não suportado): {0}")
+        @ParameterizedTest(name = "CNPJ com dígito verificador não-numérico: {0}")
         @ValueSource(strings = {
-            "1A.ABC.DEF/0001-XX",
-            "AB.CDE.FGH/0001-IJ",
-            "A1B2C3D4E5F6G7"
+            "A1.B2C.3D4/0001-A1",
+            "A1B2C3D4E5F6G7",
+            "1122233300018A"
         })
-        @DisplayName("Deve rejeitar CNPJ alfanumérico (formato 2026 não é suportado)")
-        void deveRejeitarCnpjAlfanumerico(String cnpj) {
+        @DisplayName("Deve rejeitar CNPJ com dígito verificador não-numérico")
+        void deveRejeitarCnpjComDigitoVerificadorNaoNumerico(String cnpj) {
             assertThatThrownBy(() -> new Cnpj(cnpj))
-                .isInstanceOf(CnpjInvalidoException.class)
-                .hasMessageContaining("apenas dígitos numéricos");
+                .isInstanceOf(CnpjInvalidoException.class);
         }
     }
 }

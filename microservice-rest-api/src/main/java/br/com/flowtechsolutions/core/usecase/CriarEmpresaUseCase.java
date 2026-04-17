@@ -36,7 +36,7 @@ public class CriarEmpresaUseCase {
 
         empresa.validar();
 
-        if (empresaDataProvider.existePorCnpj(empresa.cnpj().soDigitos())) {
+        if (empresaDataProvider.existePorCnpj(empresa.cnpj().valor())) {
             throw new IllegalStateException(
                 "Já existe uma empresa cadastrada com o CNPJ: " + empresa.cnpj().formatado());
         }

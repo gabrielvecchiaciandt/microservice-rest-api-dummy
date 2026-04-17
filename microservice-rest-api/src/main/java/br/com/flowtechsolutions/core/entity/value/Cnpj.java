@@ -11,11 +11,11 @@ import br.com.flowtechsolutions.core.entity.exception.CnpjInvalidoException;
  */
 public record Cnpj(String valor) {
 
-    /** Padrão formatado: XX.XXX.XXX/YYYY-ZZ */
-    public static final String FORMATO_MASCARA = "\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}";
+    /** Padrão formatado: AA.AAA.AAA/AAAA-## */
+    public static final String FORMATO_MASCARA = "[a-zA-Z0-9]{2}\\\.[a-zA-Z0-9]{3}\\\.[a-zA-Z0-9]{3}/[a-zA-Z0-9]{4}-\\d{2}";
 
-    /** Padrão somente dígitos (14 caracteres numéricos) */
-    public static final String FORMATO_SOMENTE_DIGITOS = "\\d{14}";
+    /** Padrão somente dígitos (12 alfanuméricos + 2 numéricos) */
+    public static final String FORMATO_SOMENTE_DIGITOS = "[a-zA-Z0-9]{12}\\d{2}";
 
     public Cnpj {
         if (valor == null || valor.isBlank()) {
@@ -51,9 +51,9 @@ public record Cnpj(String valor) {
     }
 
     private static void validarDigitos(String cnpj) {
-        if (!cnpj.matches(FORMATO_SOMENTE_DIGITOS)) {
+        if (!cnpj.matches("[a-zA-Z0-9]{12}\\d{2}")) {
             throw new CnpjInvalidoException(
-                "CNPJ deve conter apenas dígitos numéricos (formato legado): " + cnpj);
+                "CNPJ deve seguir o formato de 12 caracteres alfanuméricos e 2 dígitos verificadores numéricos: " + cnpj);
         }
         if (cnpj.chars().distinct().count() == 1) {
             throw new CnpjInvalidoException("CNPJ inválido: todos os dígitos são iguais: " + cnpj);

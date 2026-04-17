@@ -21,7 +21,7 @@ CREATE TABLE empresa (
     data_cadastro TIMESTAMP NOT NULL,
     CONSTRAINT pk_empresa PRIMARY KEY (id),
     CONSTRAINT uk_empresa_cnpj UNIQUE (cnpj),
-    CONSTRAINT ck_empresa_cnpj_numerico CHECK (REGEXP_LIKE(cnpj, '^[0-9]{14}$')),
+    CONSTRAINT ck_empresa_cnpj_formato CHECK (REGEXP_LIKE(cnpj, '^[A-Za-z0-9]{12}[0-9]{2}$')),
     CONSTRAINT ck_empresa_ativa CHECK (ativa IN (0, 1))
 );
 
@@ -34,7 +34,7 @@ CREATE INDEX idx_empresa_razao_social ON empresa(razao_social);
 -- Comentários na tabela e colunas
 COMMENT ON TABLE empresa IS 'Tabela de empresas cadastradas no sistema';
 COMMENT ON COLUMN empresa.id IS 'Identificador único da empresa';
-COMMENT ON COLUMN empresa.cnpj IS 'CNPJ da empresa - 14 dígitos numéricos sem formatação (formato legado)';
+COMMENT ON COLUMN empresa.cnpj IS 'CNPJ da empresa - 14 caracteres alfanuméricos (novo formato BACEN)';
 COMMENT ON COLUMN empresa.razao_social IS 'Razão social da empresa';
 COMMENT ON COLUMN empresa.nome_fantasia IS 'Nome fantasia da empresa';
 COMMENT ON COLUMN empresa.email IS 'Email de contato da empresa';

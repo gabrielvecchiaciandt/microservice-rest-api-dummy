@@ -37,12 +37,12 @@ import static org.mockito.Mockito.when;
 @DisplayName("Use Cases de Empresa")
 class EmpresaUseCaseTest {
 
-    // CNPJs numéricos legados para os testes
-    private static final String CNPJ_EMPRESA_A      = "11222333000181"; // 11.222.333/0001-81
-    private static final String CNPJ_FORNECEDOR_A   = "12345678000195"; // 12.345.678/0001-95
-    private static final String CNPJ_FORNECEDOR_B   = "45678901000175"; // 45.678.901/0001-75
-    private static final String CNPJ_PETROBRAS       = "33000167000101"; // 33.000.167/0001-01
-    private static final String CNPJ_ITAU            = "60701190000104"; // 60.701.190/0001-04
+    // CNPJs alfanuméricos para os testes (pós-2026)
+    private static final String CNPJ_EMPRESA_A      = "A1B2C3D4E00181"; // A1.B2C.3D4/E001-81
+    private static final String CNPJ_FORNECEDOR_A   = "F5G6H7I8J00195"; // F5.G6H.7I8/J001-95
+    private static final String CNPJ_FORNECEDOR_B   = "K9L0M1N2O00175"; // K9.L0M.1N2/O001-75
+    private static final String CNPJ_PETROBRAS       = "P3Q0R1S6T00101"; // P3.Q0R.1S6/T001-01
+    private static final String CNPJ_ITAU            = "U6V7W1X9Y00104"; // U6.V7W.1X9/Y001-04
 
     @Mock
     private EmpresaDataProvider empresaDataProvider;
@@ -72,7 +72,7 @@ class EmpresaUseCaseTest {
         }
 
         @Test
-        @DisplayName("Deve criar empresa com CNPJ numérico válido")
+        @DisplayName("Deve criar empresa com CNPJ alfanumérico válido")
         void deveCriarEmpresaComCnpjValido() {
             Empresa novaEmpresa = new Empresa(
                 new Cnpj(CNPJ_EMPRESA_A),
@@ -90,7 +90,7 @@ class EmpresaUseCaseTest {
 
             assertThat(resultado.id()).isEqualTo(1L);
             assertThat(resultado.cnpj().soDigitos()).isEqualTo(CNPJ_EMPRESA_A);
-            assertThat(resultado.cnpj().formatado()).isEqualTo("11.222.333/0001-81");
+            assertThat(resultado.cnpj().formatado()).isEqualTo("A1.B2C.3D4/E001-81");
             verify(empresaDataProvider).salvar(any());
         }
 
@@ -107,7 +107,7 @@ class EmpresaUseCaseTest {
 
             assertThatThrownBy(() -> useCase.executar(novaEmpresa))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("11.222.333/0001-81");
+                .hasMessageContaining("A1.B2C.3D4/E001-81");
 
             verify(empresaDataProvider, never()).salvar(any());
         }
@@ -139,13 +139,13 @@ class EmpresaUseCaseTest {
         }
 
         @Test
-        @DisplayName("Deve buscar empresa por CNPJ somente dígitos")
+        @DisplayName("Deve buscar empresa por CNPJ alfanumérico não formatado")
         void deveBuscarPorCnpjSoDigitos() {
             Empresa empresa = empresaFixtura(CNPJ_PETROBRAS, "Petróleo Brasileiro S.A.");
             when(empresaDataProvider.buscarPorCnpj(CNPJ_PETROBRAS)).thenReturn(Optional.of(empresa));
 
             Empresa resultado = useCase.executar(CNPJ_PETROBRAS);
-            assertThat(resultado.cnpj().formatado()).isEqualTo("33.000.167/0001-01");
+            assertThat(resultado.cnpj().formatado()).isEqualTo("P3.Q0R.1S6/T001-01");
         }
 
         @Test
@@ -154,7 +154,7 @@ class EmpresaUseCaseTest {
             Empresa empresa = empresaFixtura(CNPJ_ITAU, "Itaú Unibanco S.A.");
             when(empresaDataProvider.buscarPorCnpj(CNPJ_ITAU)).thenReturn(Optional.of(empresa));
 
-            Empresa resultado = useCase.executar("60.701.190/0001-04");
+            Empresa resultado = useCase.executar("U6.V7W.1X9/Y001-04");
             assertThat(resultado.razaoSocial()).isEqualTo("Itaú Unibanco S.A.");
         }
 

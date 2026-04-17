@@ -21,7 +21,7 @@ CREATE TABLE produto (
     CONSTRAINT pk_produto PRIMARY KEY (id),
     CONSTRAINT ck_produto_preco_positivo CHECK (preco >= 0),
     CONSTRAINT ck_produto_categoria CHECK (categoria IN ('INFORMATICA', 'ELETRONICOS', 'MOVEIS', 'LIVROS', 'OUTROS')),
-    CONSTRAINT ck_produto_cnpj_numerico CHECK (cnpj_fornecedor IS NULL OR REGEXP_LIKE(cnpj_fornecedor, '^[0-9]{14}$'))
+    CONSTRAINT ck_produto_cnpj_numerico CHECK (cnpj_fornecedor IS NULL OR REGEXP_LIKE(cnpj_fornecedor, '^[A-Z0-9]{12}[0-9]{2}$'))
 );
 
 -- Criação de índice para busca por nome
