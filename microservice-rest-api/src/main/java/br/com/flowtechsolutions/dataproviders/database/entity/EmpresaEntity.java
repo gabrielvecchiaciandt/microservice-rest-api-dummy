@@ -1,4 +1,4 @@
-package br.com.flowtechsolutions.database.entity;
+package br.com.flowtechsolutions.dataproviders.database.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

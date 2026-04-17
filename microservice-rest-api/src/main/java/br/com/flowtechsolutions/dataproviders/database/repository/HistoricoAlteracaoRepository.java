@@ -1,6 +1,6 @@
-package br.com.flowtechsolutions.database.repository;
+package br.com.flowtechsolutions.dataproviders.database.repository;
 
-import br.com.flowtechsolutions.database.entity.HistoricoAlteracaoEntity;
+import br.com.flowtechsolutions.dataproviders.database.entity.HistoricoAlteracaoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

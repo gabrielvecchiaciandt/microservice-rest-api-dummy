@@ -3,12 +3,12 @@ package br.com.flowtechsolutions.configuration;
 import br.com.flowtechsolutions.core.dataprovider.EmpresaDataProvider;
 import br.com.flowtechsolutions.core.dataprovider.HistoricoAlteracaoDataProvider;
 import br.com.flowtechsolutions.core.dataprovider.ProdutoDataProvider;
-import br.com.flowtechsolutions.database.EmpresaDataProviderImpl;
-import br.com.flowtechsolutions.database.HistoricoAlteracaoDataProviderImpl;
-import br.com.flowtechsolutions.database.ProdutoDataProviderImpl;
-import br.com.flowtechsolutions.database.repository.EmpresaRepository;
-import br.com.flowtechsolutions.database.repository.HistoricoAlteracaoRepository;
-import br.com.flowtechsolutions.database.repository.ProdutoRepository;
+import br.com.flowtechsolutions.dataproviders.database.EmpresaDataProviderImpl;
+import br.com.flowtechsolutions.dataproviders.database.HistoricoAlteracaoDataProviderImpl;
+import br.com.flowtechsolutions.dataproviders.database.ProdutoDataProviderImpl;
+import br.com.flowtechsolutions.dataproviders.database.repository.EmpresaRepository;
+import br.com.flowtechsolutions.dataproviders.database.repository.HistoricoAlteracaoRepository;
+import br.com.flowtechsolutions.dataproviders.database.repository.ProdutoRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

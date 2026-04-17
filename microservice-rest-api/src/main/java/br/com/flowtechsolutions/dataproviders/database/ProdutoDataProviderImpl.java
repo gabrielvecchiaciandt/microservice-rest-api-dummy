@@ -1,10 +1,10 @@
-package br.com.flowtechsolutions.database;
+package br.com.flowtechsolutions.dataproviders.database;
 
 import br.com.flowtechsolutions.core.dataprovider.ProdutoDataProvider;
 import br.com.flowtechsolutions.core.entity.Produto;
 import br.com.flowtechsolutions.core.entity.value.Cnpj;
-import br.com.flowtechsolutions.database.entity.ProdutoEntity;
-import br.com.flowtechsolutions.database.repository.ProdutoRepository;
+import br.com.flowtechsolutions.dataproviders.database.entity.ProdutoEntity;
+import br.com.flowtechsolutions.dataproviders.database.repository.ProdutoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

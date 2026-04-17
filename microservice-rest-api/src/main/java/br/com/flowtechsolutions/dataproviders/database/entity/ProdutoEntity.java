@@ -1,4 +1,4 @@
-package br.com.flowtechsolutions.database.entity;
+package br.com.flowtechsolutions.dataproviders.database.entity;
 
 import br.com.flowtechsolutions.core.entity.constants.CategoriaEnum;
 import jakarta.persistence.Column;

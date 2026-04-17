@@ -1,9 +1,9 @@
-package br.com.flowtechsolutions.database;
+package br.com.flowtechsolutions.dataproviders.database;
 
 import br.com.flowtechsolutions.core.dataprovider.HistoricoAlteracaoDataProvider;
 import br.com.flowtechsolutions.core.entity.HistoricoAlteracao;
-import br.com.flowtechsolutions.database.entity.HistoricoAlteracaoEntity;
-import br.com.flowtechsolutions.database.repository.HistoricoAlteracaoRepository;
+import br.com.flowtechsolutions.dataproviders.database.entity.HistoricoAlteracaoEntity;
+import br.com.flowtechsolutions.dataproviders.database.repository.HistoricoAlteracaoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
