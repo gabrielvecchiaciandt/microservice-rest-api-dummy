@@ -20,7 +20,7 @@ public final class EmpresaMapper {
 
     /**
      * Converte EmpresaRequest (DTO de entrada) para entidade de domínio Empresa.
-     * O CNPJ do request é validado como numérico legado pelo value object Cnpj.
+     * O CNPJ do request é validado como alfanumérico pelo value object Cnpj.
      *
      * @param request o DTO de requisição
      * @return a entidade de domínio
@@ -40,7 +40,7 @@ public final class EmpresaMapper {
 
     /**
      * Converte entidade de domínio Empresa para EmpresaResponse (DTO de saída).
-     * O CNPJ é retornado no formato formatado (XX.XXX.XXX/YYYY-ZZ).
+     * O CNPJ é retornado no formato formatado (AA.AAA.AAA/AAAA-##).
      *
      * @param empresa a entidade de domínio
      * @return o DTO de resposta

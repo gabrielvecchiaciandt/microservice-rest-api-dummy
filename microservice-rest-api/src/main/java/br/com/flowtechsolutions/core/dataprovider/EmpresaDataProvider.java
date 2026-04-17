@@ -20,9 +20,9 @@ public interface EmpresaDataProvider {
     Empresa salvar(Empresa empresa);
 
     /**
-     * Busca uma empresa pelo seu CNPJ (somente dígitos).
+     * Busca uma empresa pelo seu CNPJ.
      *
-     * @param cnpj os 14 dígitos do CNPJ sem formatação
+     * @param cnpj os 14 caracteres do CNPJ sem formatação
      * @return Optional com a empresa se encontrada
      */
     Optional<Empresa> buscarPorCnpj(String cnpj);

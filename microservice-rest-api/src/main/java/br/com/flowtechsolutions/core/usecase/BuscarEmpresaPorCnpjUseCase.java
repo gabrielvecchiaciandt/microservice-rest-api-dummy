@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Use Case para busca de Empresa pelo CNPJ numérico legado.
+ * Use Case para busca de Empresa pelo CNPJ.
  */
 public class BuscarEmpresaPorCnpjUseCase {
 
@@ -23,7 +23,7 @@ public class BuscarEmpresaPorCnpjUseCase {
 
     /**
      * Busca uma empresa pelo CNPJ.
-     * Aceita o CNPJ com ou sem formatação (ex: "11.222.333/0001-81" ou "11222333000181").
+     * Aceita o CNPJ com ou sem formatação (ex: "A1.B2C.D34/E5F6-78" ou "A1B2C3D4E5F678").
      *
      * @param cnpj o CNPJ da empresa (com ou sem máscara)
      * @return a empresa encontrada
@@ -34,7 +34,7 @@ public class BuscarEmpresaPorCnpjUseCase {
         Cnpj cnpjValidado = new Cnpj(cnpj);
         logger.debug("Buscando empresa por CNPJ: {}", cnpjValidado.formatado());
 
-        return empresaDataProvider.buscarPorCnpj(cnpjValidado.soDigitos())
+        return empresaDataProvider.buscarPorCnpj(cnpjValidado.valor())
             .orElseThrow(() -> new EmpresaNaoEncontradaException(cnpjValidado.formatado()));
     }
 }

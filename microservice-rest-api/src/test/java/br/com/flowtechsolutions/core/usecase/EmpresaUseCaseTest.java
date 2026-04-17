@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 @DisplayName("Use Cases de Empresa")
 class EmpresaUseCaseTest {
 
-    // CNPJs numéricos legados para os testes
+    // CNPJs numéricos válidos para os testes (formato legado)
     private static final String CNPJ_EMPRESA_A      = "11222333000181"; // 11.222.333/0001-81
     private static final String CNPJ_FORNECEDOR_A   = "12345678000195"; // 12.345.678/0001-95
     private static final String CNPJ_FORNECEDOR_B   = "45678901000175"; // 45.678.901/0001-75
@@ -89,7 +89,7 @@ class EmpresaUseCaseTest {
             Empresa resultado = useCase.executar(novaEmpresa);
 
             assertThat(resultado.id()).isEqualTo(1L);
-            assertThat(resultado.cnpj().soDigitos()).isEqualTo(CNPJ_EMPRESA_A);
+            assertThat(resultado.cnpj().valor()).isEqualTo(CNPJ_EMPRESA_A);
             assertThat(resultado.cnpj().formatado()).isEqualTo("11.222.333/0001-81");
             verify(empresaDataProvider).salvar(any());
         }
@@ -199,7 +199,7 @@ class EmpresaUseCaseTest {
             List<Empresa> resultado = useCase.executar();
 
             assertThat(resultado).hasSize(3);
-            assertThat(resultado).extracting(e -> e.cnpj().soDigitos())
+            assertThat(resultado).extracting(e -> e.cnpj().valor())
                 .containsExactly(CNPJ_EMPRESA_A, CNPJ_FORNECEDOR_A, CNPJ_PETROBRAS);
         }
 

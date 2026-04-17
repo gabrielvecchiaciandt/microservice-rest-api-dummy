@@ -81,7 +81,7 @@ public class ProdutoDataProviderImpl implements ProdutoDataProvider {
      */
     private ProdutoEntity toEntity(Produto produto) {
         String cnpjFornecedor = produto.cnpjFornecedor() != null
-            ? produto.cnpjFornecedor().soDigitos()
+            ? produto.cnpjFornecedor().valor()
             : null;
         return new ProdutoEntity(
             produto.id(),
